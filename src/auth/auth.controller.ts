@@ -4,11 +4,16 @@ import {
   HttpStatus,
   HttpException,
   Post,
+  Get,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { RegisterUserDto } from './auth-dto/registerUser.dto';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
+import { LoginUserDto } from './auth-dto/loginUser.dto';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -46,5 +51,36 @@ export class AuthController {
       user: newUser,
       token,
     };
+  }
+
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const user = await this.usersService.findByEmail(loginUserDto.email);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      loginUserDto.password,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST);
+    }
+
+    const token = await this.authService.generateToken(user);
+
+    return {
+      user,
+      token,
+    };
+  }
+
+  // profile
+  @Get('profile')
+  @UseGuards(AuthGuard)
+  async profile(@Req() req: { user: { id: string } }) {
+    const user = await this.usersService.findById(req.user.id);
+    return user;
   }
 }
