@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { UserRole } from '../types/user.types';
+import { Role } from '../types/user.types';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -18,8 +18,8 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true, default: UserRole.STUDENT })
-  role: UserRole;
+  @Prop({ required: true, default: Role.STUDENT })
+  role: Role;
 
   @Prop({ default: Date.now })
   createdAt: Date;

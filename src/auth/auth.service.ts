@@ -8,7 +8,7 @@ export class AuthService {
   generateToken(user: UserDocument): Promise<string> {
     console.log(process.env.JWT_SECRET);
     return this.jwtService.signAsync(
-      { id: user._id.toString() },
+      { id: user._id.toString(), role: user.role },
       { secret: process.env.JWT_SECRET },
     );
   }

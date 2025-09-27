@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 import { MinLength, MaxLength } from 'class-validator';
+import { Role } from 'src/users/types/user.types';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -19,4 +20,8 @@ export class RegisterUserDto {
   @MinLength(8)
   @MaxLength(32)
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  role: Role;
 }
