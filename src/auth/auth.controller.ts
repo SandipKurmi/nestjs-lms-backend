@@ -22,13 +22,6 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  // logic for register
-  // 1. Check if user already exists
-  // 2. hash password
-  // 3. store user in db
-  // 4. generate jwt token
-  // 5. send token in response
-
   @Post('register')
   async register(@Body() registerUserDto: RegisterUserDto) {
     // 1. Check if user already exists
